@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>안성수 | Backend Developer Portfolio</title>
   <meta name="description" content="백엔드 개발자 안성수 포트폴리오. Java, Spring Boot, JPA, MySQL, Redis 기반 프로젝트 경험과 문제 해결 방식을 정리했습니다." />
-  <link rel="stylesheet" href="style.css?v=20260707-1" />
+  <link rel="stylesheet" href="style.css?v=20260707-2" />
 </head>
 <body>
   <nav class="page-nav" aria-label="페이지 이동">
@@ -13,6 +13,7 @@
     <a href="#skills">Skills</a>
     <a href="#rerun">Re:Run</a>
     <a href="#jellypaw">JellyPaw</a>
+    <a href="#jellypaw-result">JellyPaw 결과</a>
     <a href="#todoc">TODAK</a>
     <a href="#experience">Experience</a>
   </nav>
@@ -247,143 +248,193 @@
     </section>
 
     <section class="slide" id="rerun" aria-label="Re:Run 프로젝트">
-      <div class="slide__canvas project-slide">
+      <div class="slide__canvas project-slide project-slide--case">
         <div class="slide-label">2. Project</div>
-        <header class="project-hero">
+        <header class="project-hero project-hero--compact">
           <div>
             <p>Re:Run</p>
-            <h2>보상 API 검증 로직 설계</h2>
-            <span class="project-subtitle">클라이언트 요청만 믿지 않고, 서버에서 중복 보상과 비정상 요청을 검증한 경험</span>
+            <h2>보상 API 부정 요청 방지</h2>
+            <span class="project-subtitle">보상 API를 단순 호출 기반으로 처리하면 중복 지급과 비정상 요청 위험이 있어, Redis 기반 일회성 세션 검증 구조를 설계했다.</span>
           </div>
-          <dl class="project-meta">
-            <div><dt>형태</dt><dd>SSAFY 6주 · 6인 팀 프로젝트</dd></div>
-            <div><dt>담당</dt><dd>백엔드 1인 담당 · 인증, 데이터 처리, 보상 로직, API 전반</dd></div>
-            <div><dt>기술</dt><dd>Java, Spring Boot, Redis, REST API</dd></div>
-            <div><dt>결과</dt><dd>SSAFY 특화 프로젝트 우수팀</dd></div>
+          <dl class="project-meta project-meta--compact">
+            <div><dt>형태</dt><dd>SSAFY 6주 팀 프로젝트</dd></div>
+            <div><dt>담당</dt><dd>백엔드 1인 담당</dd></div>
+            <div><dt>핵심</dt><dd>Redis 일회성 세션 검증</dd></div>
           </dl>
         </header>
 
-        <div class="project-grid">
-          <article class="project-panel">
-            <h3>문제 상황</h3>
+        <div class="project-case-grid">
+          <article class="project-panel project-panel--small">
+            <h3>Problem</h3>
             <ul>
-              <li>외부 배포 준비 중 보상 API 악용 가능성을 확인</li>
-              <li>클라이언트 요청만으로 보상을 지급하면 중복 보상과 비정상 요청 가능</li>
-              <li>실제 서비스라면 공정성과 신뢰성에 영향을 줄 수 있다고 판단</li>
+              <li>게임 종료 보상 API가 반복 호출될 수 있음</li>
+              <li>클라이언트 요청만 신뢰하면 비정상 보상 지급 가능</li>
+              <li>서비스 공정성과 신뢰성 저하 위험</li>
             </ul>
           </article>
 
-          <article class="project-panel">
-            <h3>내가 한 행동</h3>
+          <article class="project-panel project-panel--small">
+            <h3>Solution</h3>
             <ul>
-              <li>SecureRandom 기반 세션 토큰 생성</li>
-              <li>Redis NX, TTL 옵션을 활용한 검증 로직 설계</li>
-              <li>서버 측에서 세션을 원자적으로 검증하도록 구성</li>
+              <li>게임 시작 시 서버가 일회성 세션 생성</li>
+              <li>SecureRandom 기반 sessionSecret 생성</li>
+              <li>Redis에 sessionName + sessionSecret 저장</li>
+              <li>NX 옵션으로 중복 세션 생성 방지</li>
+              <li>TTL로 세션 만료 자동 처리</li>
             </ul>
           </article>
 
-          <article class="project-panel">
-            <h3>결과</h3>
-            <ul>
-              <li>중복 보상과 비정상 요청을 막을 수 있는 구조로 보완</li>
-              <li>맡은 기능 구현 이후 운영 중 생길 수 있는 문제까지 확인</li>
-              <li>프로젝트 우수팀 선정</li>
-            </ul>
+          <article class="project-panel project-panel--small">
+            <h3>Flow</h3>
+            <ol class="step-list">
+              <li><span>1</span>Game Start</li>
+              <li><span>2</span>Redis SET NX TTL</li>
+              <li><span>3</span>Game End Request</li>
+              <li><span>4</span>Redis Session Validate</li>
+              <li><span>5</span>Save Result + Reward</li>
+              <li><span>6</span>Delete Redis Session</li>
+            </ol>
           </article>
 
-          <article class="project-panel">
-            <h3>배운 점</h3>
+          <article class="project-panel project-panel--small">
+            <h3>Result / Limitation</h3>
             <ul>
-              <li>기능이 동작하는 것과 운영 가능한 구조는 다름</li>
-              <li>백엔드는 요청 처리뿐 아니라 서비스 신뢰성도 지켜야 함</li>
-              <li>맡은 기능 이후의 문제까지 보는 태도가 중요함</li>
+              <li>중복 보상 요청 방지</li>
+              <li>세션 재사용 차단</li>
+              <li>만료 세션 자동 정리</li>
+              <li>기능 구현을 넘어 운영 신뢰성까지 고려</li>
             </ul>
+            <p class="project-note">클라이언트 기반 요청 검증만으로는 완전한 보안이 아니므로 서버 권위 검증, 이상 탐지, 트랜잭션 처리가 추가로 필요함</p>
           </article>
         </div>
+
+        <p class="project-callout">핵심은 보상 지급 전에 Redis의 일회성 세션을 검증하고, 처리 후 세션을 삭제해 재사용 요청을 막는 것이다.</p>
       </div>
     </section>
 
     <section class="slide" id="jellypaw" aria-label="JellyPaw 프로젝트">
-      <div class="slide__canvas project-slide">
+      <div class="slide__canvas project-slide project-slide--case">
         <div class="slide-label">3. Project</div>
-        <header class="project-hero">
+        <header class="project-hero project-hero--compact">
           <div>
             <p>JellyPaw</p>
             <h2>게시글 목록 조회 최적화</h2>
-            <span class="project-subtitle">N+1, count 쿼리, offset 문제를 나눠 보고 조회 구조를 단순화한 경험</span>
+            <span class="project-subtitle">offset 기반 Page 조회와 연관 데이터 N+1 문제를 cursor Slice 조회와 분리 조회로 개선</span>
           </div>
-          <dl class="project-meta">
-            <div><dt>프로젝트</dt><dd>반려동물 건강 종합 플랫폼</dd></div>
+          <dl class="project-meta project-meta--compact">
+            <div><dt>프로젝트</dt><dd>JellyPaw</dd></div>
             <div><dt>형태</dt><dd>6인 팀 프로젝트</dd></div>
             <div><dt>기간</dt><dd>6~7주</dd></div>
             <div><dt>담당</dt><dd>백엔드 / board / board-view / 게시글 목록 조회 API</dd></div>
             <div><dt>기술</dt><dd>Java 17, Spring Boot, JPA, Hibernate, MySQL 8.0, Docker</dd></div>
-            <div><dt>키워드</dt><dd>Slice, cursor, fetch join, IN 조회, CQRS 경험</dd></div>
           </dl>
         </header>
 
-        <div class="project-grid project-grid--wide">
-          <article class="project-panel">
-            <h3>문제 인식</h3>
+        <div class="project-case-grid project-case-grid--asym">
+          <article class="project-panel project-panel--small">
+            <h3>문제 상황</h3>
             <ul>
-              <li>게시글은 쓰기보다 조회 비율이 높을 것이라고 가정</li>
-              <li>조회가 비효율적이라는 점을 확인</li>
-              <li>N+1, 불필요한 count 쿼리, offset 기반 페이지네이션 한계를 분리해서 분석</li>
+              <li>대량 데이터 조건에서 게시글 목록 조회 API 지연 사례 확인</li>
+              <li>기본 목록 조회가 offset 기반 Page 방식이라 count 쿼리 발생</li>
+              <li>DTO 매핑 과정에서 댓글 수, 좋아요 수, 조회 수, 이미지 조회가 게시글마다 추가 발생</li>
             </ul>
+            <div class="project-metric project-metric--danger">
+              <strong>게시글 20개 조회 시 최대 82개의 SELECT 발생</strong>
+              <span>1(count) + 1(list) + 20(comment) + 20(like) + 20(view) + 20(image) = 82</span>
+            </div>
           </article>
 
-          <article class="project-panel">
-            <h3>개선 과정</h3>
-            <ul>
-              <li>Page 대신 Slice 적용</li>
-              <li>offset 대신 cursor 방식 적용</li>
-              <li>ToOne 관계는 fetch join으로 함께 조회</li>
-              <li>ToMany 이미지 데이터는 게시글 ID 기준 IN 조회로 분리</li>
-            </ul>
+          <article class="project-panel project-panel--small">
+            <h3>문제를 나눈 기준</h3>
+            <div class="criteria-list">
+              <div><span>1</span><strong>Page 문제</strong><p>무한 스크롤에 필요 없는 count 쿼리 발생</p></div>
+              <div><span>2</span><strong>offset 문제</strong><p>새 게시글 추가 시 중복·누락 가능성</p></div>
+              <div><span>3</span><strong>연관관계 조회 문제</strong><p>작성자·카운트·이미지 접근 과정에서 N+1 가능성</p></div>
+              <div><span>4</span><strong>Image 컬렉션 문제</strong><p>OneToMany + pagination 조합은 비효율 가능성</p></div>
+            </div>
+          </article>
+        </div>
+
+        <p class="project-callout">핵심은 응답 시간이 느리다는 현상을, 페이지네이션 / count 쿼리 / 연관관계 / 이미지 컬렉션 조회 문제로 나눠서 본 것입니다.</p>
+      </div>
+    </section>
+
+    <section class="slide" id="jellypaw-result" aria-label="JellyPaw 해결 과정과 결과">
+      <div class="slide__canvas project-slide project-slide--case">
+        <div class="slide-label">4. Project</div>
+        <header class="project-hero project-hero--compact">
+          <div>
+            <p>JellyPaw</p>
+            <h2>해결 과정과 결과</h2>
+            <span class="project-subtitle">cursor Slice 조회, fetch join, 이미지 벌크 조회로 쿼리 구조 단순화</span>
+          </div>
+          <dl class="project-meta project-meta--compact">
+            <div><dt>Page</dt><dd>Slice</dd></div>
+            <div><dt>offset</dt><dd>cursor(createdAt + id)</dd></div>
+            <div><dt>ToOne</dt><dd>fetch join</dd></div>
+            <div><dt>Image</dt><dd>IN 벌크 조회</dd></div>
+            <div><dt>Index</dt><dd>board_view(created_at, id)</dd></div>
+          </dl>
+        </header>
+
+        <div class="project-case-grid project-case-grid--asym">
+          <article class="project-panel project-panel--small">
+            <h3>해결 과정</h3>
+            <div class="criteria-list criteria-list--compact">
+              <div><span>1</span><strong>Page -> Slice</strong><p>전체 개수보다 다음 데이터 존재 여부만 확인</p></div>
+              <div><span>2</span><strong>offset -> cursor</strong><p>createdAt DESC, id DESC 기준으로 중복·누락 가능성 완화</p></div>
+              <div><span>3</span><strong>ToOne fetch join</strong><p>작성자, 댓글 수, 좋아요 수, 조회 수를 함께 조회</p></div>
+              <div><span>4</span><strong>Image IN 벌크 조회</strong><p>fetch join 대신 게시글 ID 기준으로 분리 조회</p></div>
+            </div>
+            <pre class="code-sample"><code>where board.created_at &lt; :cursorCreatedAt
+   or (board.created_at = :cursorCreatedAt and board.id &lt; :cursorId)
+order by board.created_at desc, board.id desc
+limit :pageSize</code></pre>
           </article>
 
-          <article class="project-panel">
-            <h3>검증 / 결과</h3>
+          <article class="project-panel project-panel--small">
+            <h3>결과</h3>
+            <div class="compare-metric">
+              <div>
+                <span>Before</span>
+                <strong>82 SELECT</strong>
+                <p>1(count) + 1(list) + 게시글별 연관 데이터 조회</p>
+              </div>
+              <b aria-hidden="true">-></b>
+              <div>
+                <span>After</span>
+                <strong>2 SELECT</strong>
+                <p>board + ToOne fetch join, image IN bulk query</p>
+              </div>
+            </div>
+            <h4>검증</h4>
             <ul>
-              <li>EXPLAIN ANALYZE로 실행계획을 확인하며 개선 방향 검증</li>
-              <li>조회 구조를 더 단순하고 효율적으로 변경</li>
-              <li>기술을 많이 쓰기보다 병목을 먼저 봐야 한다는 점을 체감</li>
-            </ul>
-          </article>
-
-          <article class="project-panel project-panel--note">
-            <h3>솔직한 맥락</h3>
-            <ul>
-              <li>CQRS 분리는 실제 운영 데이터로 검증해 결정한 것은 아님</li>
-              <li>구조를 직접 경험해보고 싶다는 목적도 있었음</li>
-              <li>Kafka 기반 정합성 구조는 팀원이 설계한 환경을 사용했으며, 실패 재처리까지 깊게 이해한 상태는 아니었음</li>
-              <li>앞으로 더 공부해야 할 영역으로 인식</li>
+              <li>board_view 100만 건, image_view 12만 건 테스트 데이터 구성</li>
+              <li>board_view(created_at, id) 복합 인덱스 적용</li>
+              <li>EXPLAIN으로 인덱스 사용 확인</li>
+              <li>Postman 재측정 결과 warm cache 기준 62ms 확인</li>
             </ul>
           </article>
         </div>
+
+        <p class="project-callout">27.46초와 62ms는 동일 운영 환경의 A/B 비교가 아니므로 절대 수치보다 count 쿼리 제거, N+1 완화, cursor 조건 기반 인덱스 적용, 쿼리 구조 단순화를 중심으로 정리했습니다.</p>
       </div>
     </section>
 
     <section class="slide" id="todoc" aria-label="TODAK 프로젝트">
-      <div class="slide__canvas project-slide">
-        <div class="slide-label">4. Project</div>
-        <header class="project-hero">
+      <div class="slide__canvas project-slide project-slide--case">
+        <div class="slide-label">5. Project</div>
+        <header class="project-hero project-hero--single">
           <div>
             <p>TODAK</p>
-            <h2>비대면 진료 서비스 <span class="nowrap">인증/인가</span> 및 예약 API</h2>
-            <span class="project-subtitle">소셜로그인, JWT 기반 인증/인가, 예약 API를 구현하며 백엔드 기본기를 경험한 프로젝트</span>
+            <h2>Todak 비대면 진료 서비스 인증/인가 및 예약 API</h2>
+            <span class="project-subtitle">소셜로그인, JWT 기반 인증/인가, 예약 API를 구현하며 백엔드 필수 역량의 기본기를 경험했다.</span>
           </div>
-          <dl class="project-meta">
-            <div><dt>프로젝트</dt><dd>비대면 진료 서비스</dd></div>
-            <div><dt>담당</dt><dd>회원가입, 소셜로그인, JWT 인증/인가, 예약 관련 API</dd></div>
-            <div><dt>경험</dt><dd>수의사, 반려인, 병원관계자 역할 기반 처리</dd></div>
-            <div><dt>결과</dt><dd>프로젝트 우수상</dd></div>
-          </dl>
         </header>
 
-        <div class="project-grid">
-          <article class="project-panel">
-            <h3>Project Overview</h3>
+        <div class="project-case-grid project-case-grid--todak">
+          <article class="project-panel project-panel--small">
+            <h3>1. Project Overview</h3>
             <ul>
               <li>비대면 진료 서비스 프로젝트</li>
               <li>인증/인가와 예약 관련 API를 경험한 프로젝트</li>
@@ -391,8 +442,8 @@
             </ul>
           </article>
 
-          <article class="project-panel">
-            <h3>My Role</h3>
+          <article class="project-panel project-panel--small">
+            <h3>2. My Role</h3>
             <ul>
               <li>회원가입</li>
               <li>소셜로그인</li>
@@ -402,28 +453,51 @@
             </ul>
           </article>
 
-          <article class="project-panel">
-            <h3>Result</h3>
-            <ul>
-              <li>인증/인가 구조와 API 흐름에 대한 기본기 확보</li>
-              <li>프로젝트 우수상 수상</li>
-            </ul>
+          <article class="project-panel project-panel--small">
+            <h3>3. Why &amp; Request Flow</h3>
+            <div class="reason-grid">
+              <div>
+                <strong>소셜로그인 선택 이유</strong>
+                <ul>
+                  <li>초기 가입 시 요구 정보가 많아 가입 마찰을 줄이기 위함</li>
+                  <li>반려동물 정보, 수의사 등록, 병원 등록 등 초기 입력 부담 완화</li>
+                </ul>
+              </div>
+              <div>
+                <strong>JWT 선택 이유</strong>
+                <ul>
+                  <li>여러 클라이언트 대응을 고려</li>
+                  <li>무상태 구조와 향후 인증 전달 가능성 고려</li>
+                </ul>
+              </div>
+            </div>
+            <ol class="flow-strip">
+              <li>Social Login</li>
+              <li>JWT Authentication</li>
+              <li>Role-based Authorization</li>
+              <li>Reservation API</li>
+              <li>Response</li>
+            </ol>
           </article>
 
-          <article class="project-panel">
-            <h3>Learning</h3>
+          <article class="project-panel project-panel--small">
+            <h3>4. Learning</h3>
             <ul>
-              <li>인증은 단순 로그인 기능이 아니라 서비스 신뢰의 기본임을 배움</li>
-              <li>API는 기능 단위 구현보다 전체 요청 흐름 안에서 봐야 한다고 느낌</li>
+              <li>인증/인가가 서비스 신뢰성과 연결된다는 점을 경험</li>
+              <li>역할에 따라 요청을 구분해 처리하는 흐름을 이해</li>
+              <li>예약 API를 구현하며 백엔드 기본기를 경험</li>
+              <li>기술은 많이 쓰는 것보다 목적에 맞게 선택하는 것이 중요하다는 점을 배움</li>
             </ul>
           </article>
         </div>
+
+        <p class="project-callout">Backend Essentials · Social Login · JWT · Authorization · Reservation API</p>
       </div>
     </section>
 
     <section class="slide" id="experience" aria-label="추가 경험">
       <div class="slide__canvas experience-slide">
-        <div class="slide-label">5. Experience</div>
+        <div class="slide-label">6. Experience</div>
         <header class="section-heading">
           <p>Experience</p>
           <h2>프로젝트 밖에서 드러난 일하는 방식</h2>
