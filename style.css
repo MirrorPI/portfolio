@@ -278,15 +278,44 @@ li + li {
   gap: 26px 46px;
 }
 
+.skills-slide {
+  padding-top: 40px;
+  padding-bottom: 34px;
+}
+
+.skills-slide .section-heading {
+  margin: 14px 0 20px;
+}
+
+.skills-slide .section-heading p {
+  font-size: 64px;
+}
+
+.skills-slide .section-heading h2 {
+  font-size: 34px;
+}
+
+.skills-slide .skills-layout {
+  gap: 20px 38px;
+}
+
 .skills-column {
   display: grid;
   gap: 26px;
   align-content: start;
 }
 
+.skills-slide .skills-column {
+  gap: 20px;
+}
+
 .skill-group {
   display: grid;
   gap: 18px;
+}
+
+.skills-slide .skill-group {
+  gap: 12px;
 }
 
 .skill-group h3 {
@@ -295,11 +324,21 @@ li + li {
   border-bottom: 1px solid var(--line);
 }
 
+.skills-slide .skill-group h3 {
+  font-size: 25px;
+  padding-bottom: 7px;
+}
+
 .skill-item {
   display: grid;
   grid-template-columns: 76px minmax(0, 1fr);
   gap: 18px;
   align-items: start;
+}
+
+.skills-slide .skill-item {
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 14px;
 }
 
 .skill-mark {
@@ -315,6 +354,12 @@ li + li {
   box-shadow: 0 8px 22px rgba(21, 31, 46, 0.08);
 }
 
+.skills-slide .skill-mark {
+  width: 56px;
+  height: 56px;
+  padding: 8px;
+}
+
 .skill-mark--pair {
   gap: 6px;
   flex-wrap: wrap;
@@ -327,15 +372,30 @@ li + li {
   object-fit: contain;
 }
 
+.skills-slide .skill-icon {
+  width: 39px;
+  height: 39px;
+}
+
 .skill-icon--pair {
   width: 27px;
   height: 27px;
+}
+
+.skills-slide .skill-icon--pair {
+  width: 22px;
+  height: 22px;
 }
 
 .skill-icon--wide {
   width: 58px;
   height: auto;
   max-height: 42px;
+}
+
+.skills-slide .skill-icon--wide {
+  width: 45px;
+  max-height: 31px;
 }
 
 .skill-item strong {
@@ -346,10 +406,24 @@ li + li {
   line-height: 1.2;
 }
 
+.skills-slide .skill-item strong {
+  margin-bottom: 2px;
+  font-size: 18px;
+}
+
 .skill-item li {
   color: #2e333b;
   font-size: 16px;
   font-weight: 700;
+}
+
+.skills-slide .skill-item li {
+  font-size: 14px;
+  line-height: 1.42;
+}
+
+.skills-slide .skill-item li + li {
+  margin-top: 0.18rem;
 }
 
 .project-slide {
