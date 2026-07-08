@@ -151,28 +151,31 @@ li + li {
 
 .contact-list {
   display: grid;
-  gap: 13px;
-  margin: 22px 0 0;
+  gap: 12px;
+  margin: 24px 0 0;
 }
 
 .contact-list div {
   display: grid;
-  gap: 3px;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px;
+  align-items: baseline;
 }
 
 .contact-list dt {
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .contact-list dd {
   margin: 0;
   color: var(--ink);
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 800;
+  overflow-wrap: anywhere;
 }
 
 .profile-main {
@@ -409,6 +412,13 @@ li + li {
 .skills-slide .skill-item strong {
   margin-bottom: 2px;
   font-size: 18px;
+}
+
+.skill-level {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 900;
+  white-space: nowrap;
 }
 
 .skill-item li {
