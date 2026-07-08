@@ -868,6 +868,143 @@ li + li {
   line-height: 1.2;
 }
 
+.rerun-board {
+  display: grid;
+  grid-template-columns: 0.88fr 1.62fr 0.98fr;
+  gap: 14px;
+  align-items: stretch;
+  min-height: 0;
+}
+
+.rerun-stack {
+  display: grid;
+  gap: 12px;
+  align-content: stretch;
+}
+
+.rerun-stack .project-panel {
+  display: grid;
+  align-content: start;
+}
+
+.rerun-diagram {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding: 12px 14px;
+}
+
+.rerun-architecture {
+  width: 100%;
+  height: 100%;
+  min-height: 408px;
+  display: block;
+}
+
+.rerun-architecture text {
+  font-family: 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.arch-line {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  marker-end: url(#arch-arrow-blue);
+}
+
+.arch-line--dashed {
+  stroke-width: 2.5;
+  stroke-dasharray: 6 5;
+}
+
+.arch-line--red {
+  stroke: #c93535;
+  marker-end: url(#arch-arrow-red);
+}
+
+.arch-caption {
+  fill: #143b7a;
+  font-size: 12.5px;
+  font-weight: 900;
+}
+
+.arch-caption--muted {
+  fill: #526070;
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+.arch-caption--red {
+  fill: #b71921;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.arch-node rect {
+  fill: #f7fbff;
+  stroke: #b7cff1;
+  stroke-width: 2;
+}
+
+.arch-node circle,
+.arch-node path,
+.arch-node ellipse {
+  fill: none;
+  stroke: var(--ink-strong);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.arch-node--backend rect {
+  fill: #f4f8ff;
+  stroke: #b7cff1;
+}
+
+.arch-node--backend rect:not(:first-child) {
+  fill: #ffffff;
+  stroke: var(--blue);
+}
+
+.arch-node--redis rect {
+  fill: #fff3f2;
+  stroke: #efa6a3;
+}
+
+.arch-node--redis rect:not(:first-child),
+.arch-node--redis path {
+  fill: none;
+  stroke: #d82f2f;
+}
+
+.arch-node--db rect {
+  fill: #f0fbf4;
+  stroke: #a8d9b5;
+}
+
+.arch-node--db ellipse,
+.arch-node--db path {
+  stroke: #168b5a;
+}
+
+.arch-node--reward rect {
+  fill: #fff9eb;
+  stroke: #e9c575;
+}
+
+.arch-node--reward rect:not(:first-child),
+.arch-node--reward path {
+  fill: none;
+  stroke: #c98700;
+}
+
+.arch-node-title {
+  fill: var(--ink-strong);
+  font-size: 17px;
+  font-weight: 900;
+}
+
 #rerun .project-slide--case {
   gap: 12px;
   padding-top: 36px;
@@ -885,6 +1022,10 @@ li + li {
 
 #rerun .project-panel--small {
   padding: 13px 18px;
+}
+
+#rerun .rerun-diagram {
+  padding: 13px 14px;
 }
 
 #rerun .project-panel--small h3 {
@@ -976,7 +1117,8 @@ li + li {
   .project-hero--compact,
   .project-case-grid,
   .project-case-grid--asym,
-  .project-case-grid--todak {
+  .project-case-grid--todak,
+  .rerun-board {
     grid-template-columns: 1fr;
   }
 
@@ -1118,5 +1260,9 @@ li + li {
   .reason-grid,
   .flow-strip {
     grid-template-columns: 1fr;
+  }
+
+  .rerun-architecture {
+    min-height: 330px;
   }
 }

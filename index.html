@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>안성수 | Backend Developer Portfolio</title>
   <meta name="description" content="백엔드 개발자 안성수 포트폴리오. Java, Spring Boot, JPA, MySQL, Redis 기반 프로젝트 경험과 문제 해결 방식을 정리했습니다." />
-  <link rel="stylesheet" href="style.css?v=20260708-1" />
+  <link rel="stylesheet" href="style.css?v=20260708-2" />
 </head>
 <body>
   <nav class="page-nav" aria-label="페이지 이동">
@@ -14,7 +14,7 @@
     <a href="#rerun">Re:Run</a>
     <a href="#jellypaw">JellyPaw</a>
     <a href="#jellypaw-result">JellyPaw 결과</a>
-    <a href="#todoc">TODAK</a>
+    <a href="#todak">TODAK</a>
     <a href="#experience">Experience</a>
   </nav>
 
@@ -241,7 +241,7 @@
           <div>
             <p>Re:Run</p>
             <h2>보상 API 부정 요청 방지</h2>
-            <span class="project-subtitle">보상 API를 단순 호출 기반으로 처리하면 중복 지급과 비정상 요청 위험이 있어, Redis 기반 일회성 세션 검증 구조를 설계했다.</span>
+            <span class="project-subtitle">보상 API를 단순 호출 기반으로 처리하면 중복 지급과 비정상 요청 위험이 있어, Redis 기반 일회성 세션 검증 구조를 설계하고 구현했다.</span>
           </div>
           <dl class="project-meta project-meta--compact">
             <div><dt>형태</dt><dd>SSAFY 6주 팀 프로젝트</dd></div>
@@ -250,49 +250,136 @@
           </dl>
         </header>
 
-        <div class="project-case-grid">
-          <article class="project-panel project-panel--small">
-            <h3>Problem</h3>
-            <ul>
-              <li>게임 종료 보상 API가 반복 호출될 수 있음</li>
-              <li>클라이언트 요청만 신뢰하면 비정상 보상 지급 가능</li>
-              <li>서비스 공정성과 신뢰성 저하 위험</li>
-            </ul>
+        <div class="rerun-board">
+          <div class="rerun-stack">
+            <article class="project-panel project-panel--small">
+              <h3>Problem</h3>
+              <ul>
+                <li>게임 종료 보상 API가 반복 호출될 수 있음</li>
+                <li>클라이언트 요청만 신뢰하면 비정상 보상 지급 가능</li>
+                <li>중복 지급은 서비스 공정성과 운영 신뢰도를 직접 저하시킴</li>
+              </ul>
+            </article>
+
+            <article class="project-panel project-panel--small">
+              <h3>Flow</h3>
+              <ol class="step-list">
+                <li><span>1</span>Game Start</li>
+                <li><span>2</span>Redis SET NX TTL</li>
+                <li><span>3</span>Game End Request</li>
+                <li><span>4</span>Redis Session Validate</li>
+                <li><span>5</span>Save Result + Reward</li>
+                <li><span>6</span>Delete Redis Session</li>
+              </ol>
+            </article>
+          </div>
+
+          <article class="project-panel project-panel--small rerun-diagram">
+            <h3>Architecture Flow</h3>
+            <svg class="rerun-architecture" viewBox="0 0 640 420" role="img" aria-labelledby="rerun-arch-title rerun-arch-desc">
+              <title id="rerun-arch-title">Re:Run 보상 API 아키텍처 흐름도</title>
+              <desc id="rerun-arch-desc">클라이언트가 게임 시작을 요청하면 백엔드가 Redis에 일회성 세션을 저장하고, 게임 종료 시 세션 검증 후 DB 저장, 보상 지급, Redis 세션 삭제를 수행한다.</desc>
+              <defs>
+                <marker id="arch-arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#124f9c"></path>
+                </marker>
+                <marker id="arch-arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#c93535"></path>
+                </marker>
+                <filter id="arch-soft-shadow" x="-12%" y="-12%" width="124%" height="124%">
+                  <feDropShadow dx="0" dy="7" stdDeviation="7" flood-color="#0f1d34" flood-opacity="0.12"></feDropShadow>
+                </filter>
+              </defs>
+
+              <path class="arch-line" d="M 126 174 L 258 174"></path>
+              <text class="arch-caption" x="156" y="158">Start Request</text>
+              <path class="arch-line arch-line--dashed" d="M 258 205 L 126 205"></path>
+              <text class="arch-caption arch-caption--muted" x="147" y="222">sessionName 반환</text>
+
+              <path class="arch-line" d="M 382 166 L 506 166"></path>
+              <text class="arch-caption" x="410" y="150">SET session</text>
+              <text class="arch-caption arch-caption--muted" x="424" y="165">(NX, TTL)</text>
+
+              <path class="arch-line" d="M 126 236 L 258 236"></path>
+              <text class="arch-caption" x="158" y="255">End Request</text>
+              <text class="arch-caption arch-caption--muted" x="154" y="271">secret + result</text>
+
+              <path class="arch-line" d="M 382 210 L 506 210"></path>
+              <text class="arch-caption" x="430" y="197">Validate</text>
+              <path class="arch-line arch-line--dashed" d="M 506 236 L 382 236"></path>
+              <text class="arch-caption arch-caption--muted" x="428" y="254">검증 결과 반환</text>
+
+              <path class="arch-line" d="M 309 262 L 272 312"></path>
+              <text class="arch-caption arch-caption--muted" x="214" y="296">Save Result</text>
+              <path class="arch-line" d="M 351 262 L 440 312"></path>
+              <text class="arch-caption arch-caption--muted" x="404" y="296">Reward</text>
+              <path class="arch-line arch-line--red arch-line--dashed" d="M 372 258 C 440 316 558 302 558 258"></path>
+              <text class="arch-caption arch-caption--red" x="464" y="292">Delete Session</text>
+
+              <g class="arch-node arch-node--client" filter="url(#arch-soft-shadow)">
+                <rect x="24" y="152" width="102" height="96" rx="10"></rect>
+                <circle cx="75" cy="185" r="15"></circle>
+                <path d="M 50 225 C 54 204 96 204 100 225"></path>
+                <text class="arch-node-title" x="75" y="238" text-anchor="middle">Client</text>
+              </g>
+
+              <g class="arch-node arch-node--backend" filter="url(#arch-soft-shadow)">
+                <rect x="258" y="136" width="124" height="126" rx="10"></rect>
+                <rect x="290" y="158" width="60" height="20" rx="4"></rect>
+                <rect x="290" y="188" width="60" height="20" rx="4"></rect>
+                <rect x="290" y="218" width="60" height="20" rx="4"></rect>
+                <text class="arch-node-title" x="320" y="252" text-anchor="middle">Backend</text>
+              </g>
+
+              <g class="arch-node arch-node--redis" filter="url(#arch-soft-shadow)">
+                <rect x="506" y="142" width="104" height="116" rx="10"></rect>
+                <rect x="532" y="166" width="52" height="38" rx="7"></rect>
+                <path d="M 532 176 L 558 185 L 584 176"></path>
+                <path d="M 532 188 L 558 197 L 584 188"></path>
+                <text class="arch-node-title" x="558" y="238" text-anchor="middle">Redis</text>
+              </g>
+
+              <g class="arch-node arch-node--db" filter="url(#arch-soft-shadow)">
+                <rect x="222" y="312" width="104" height="82" rx="10"></rect>
+                <ellipse cx="274" cy="335" rx="28" ry="10"></ellipse>
+                <path d="M 246 335 L 246 363 C 246 369 302 369 302 363 L 302 335"></path>
+                <ellipse cx="274" cy="363" rx="28" ry="10"></ellipse>
+                <text class="arch-node-title" x="274" y="388" text-anchor="middle">DB</text>
+              </g>
+
+              <g class="arch-node arch-node--reward" filter="url(#arch-soft-shadow)">
+                <rect x="400" y="312" width="110" height="82" rx="10"></rect>
+                <rect x="430" y="344" width="50" height="34" rx="4"></rect>
+                <path d="M 424 344 L 486 344"></path>
+                <path d="M 455 344 L 455 378"></path>
+                <path d="M 438 336 C 424 324 421 349 455 344"></path>
+                <path d="M 472 336 C 486 324 489 349 455 344"></path>
+                <text class="arch-node-title" x="455" y="388" text-anchor="middle">Reward</text>
+              </g>
+            </svg>
           </article>
 
-          <article class="project-panel project-panel--small">
-            <h3>Solution</h3>
-            <ul>
-              <li>게임 시작 시 서버가 일회성 세션 생성</li>
-              <li>SecureRandom 기반 sessionSecret 생성</li>
-              <li>Redis에 sessionName + sessionSecret 저장</li>
-              <li>NX 옵션으로 중복 세션 생성 방지</li>
-              <li>TTL로 세션 만료 자동 처리</li>
-            </ul>
-          </article>
+          <div class="rerun-stack">
+            <article class="project-panel project-panel--small">
+              <h3>Solution</h3>
+              <ul>
+                <li>게임 시작 시 서버가 sessionName과 sessionSecret 생성</li>
+                <li>Redis에 SET NX + TTL로 일회성 세션 저장</li>
+                <li>보상 지급 전 Redis 값으로 요청 일치성 검증</li>
+                <li>처리 후 세션 삭제로 재사용 요청 차단</li>
+              </ul>
+            </article>
 
-          <article class="project-panel project-panel--small">
-            <h3>Flow</h3>
-            <ol class="step-list">
-              <li><span>1</span>Game Start</li>
-              <li><span>2</span>Redis SET NX TTL</li>
-              <li><span>3</span>Game End Request</li>
-              <li><span>4</span>Redis Session Validate</li>
-              <li><span>5</span>Save Result + Reward</li>
-              <li><span>6</span>Delete Redis Session</li>
-            </ol>
-          </article>
-
-          <article class="project-panel project-panel--small">
-            <h3>Result / Limitation</h3>
-            <ul>
-              <li>중복 보상 요청 방지</li>
-              <li>세션 재사용 차단</li>
-              <li>만료 세션 자동 정리</li>
-              <li>기능 구현을 넘어 운영 신뢰성까지 고려</li>
-            </ul>
-            <p class="project-note">클라이언트 기반 요청 검증만으로는 완전한 보안이 아니므로 서버 권위 검증, 이상 탐지, 트랜잭션 처리가 추가로 필요함</p>
-          </article>
+            <article class="project-panel project-panel--small">
+              <h3>Result / Limitation</h3>
+              <ul>
+                <li>중복 보상 요청과 세션 재사용 차단</li>
+                <li>만료 세션 자동 정리로 운영 부담 완화</li>
+                <li>기능 구현을 넘어 운영 신뢰성까지 고려</li>
+              </ul>
+              <p class="project-note">클라이언트 기반 검증만으로는 완전한 보안이 아니므로 서버 권위 검증, 이상 탐지, 트랜잭션 처리가 추가로 필요함</p>
+            </article>
+          </div>
         </div>
 
         <p class="project-callout">핵심은 보상 지급 전에 Redis의 일회성 세션을 검증하고, 처리 후 세션을 삭제해 재사용 요청을 막는 것이다.</p>
@@ -408,7 +495,7 @@ limit :pageSize</code></pre>
       </div>
     </section>
 
-    <section class="slide" id="todoc" aria-label="TODAK 프로젝트">
+    <section class="slide" id="todak" aria-label="TODAK 프로젝트">
       <div class="slide__canvas project-slide project-slide--case">
         <div class="slide-label">5. Project</div>
         <header class="project-hero project-hero--single">
