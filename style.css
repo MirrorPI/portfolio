@@ -425,6 +425,22 @@ li + li {
   white-space: nowrap;
 }
 
+.half-star {
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  color: #c9ccd4;
+}
+
+.half-star::before {
+  content: "★";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 50%;
+  overflow: hidden;
+  color: var(--ink-strong);
+}
+
 .skill-item li {
   color: #2e333b;
   font-size: 16px;
